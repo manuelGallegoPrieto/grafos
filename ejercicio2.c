@@ -16,16 +16,19 @@ int main(void)
 	gT26 = creaGrafoT26();
 	verGrafo(gT26);
   	printf("\nProfundidad: ");
+  iniciar(gT26);
   	profundidadMejorado(1,gT26);
   	printf("\nProfundidad: ");
+  iniciar(gT26);
   	profundidadMejorado(6,gT26);
 	iniciar(gT26);
  	printf("\nAmplitud : ");
  	amplitudMejorado(1,gT26);
 	printf("\nAmplitud : ");
+  iniciar(gT26);
 	amplitudMejorado(6,gT26);
 	verGrafo(gT26);
-        ciclico = ordenTop2(gT26);
+        ciclico = ordenTop1(gT26);
        	verGrafo(gT26);
 	if (ciclico==-1) 
 		printf("\nGrafo ciclico ¡ No es posible la ordenación topológica !");

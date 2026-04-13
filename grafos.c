@@ -25,23 +25,80 @@ void iniciar(tipoGrafo *g)
   for (int i = 1; i <= g->orden; i++){
     temporal = g->directorio[i].lista;
     while (temporal != NULL){
-      g->directorio[temporal->v] += 1;
+      g->directorio[temporal->v].gradoEntrada += 1;
       temporal = temporal->sig;
     }
   }
 }
 
 void profundidadMejorado(int v_inicio,tipoGrafo *g)
-{
+{ int w;
+  pArco  p;
+  printf("%d ",v_inicio);
+  g->directorio[v_inicio].alcanzado=1;
+  p = g->directorio[v_inicio].lista;
+  while (p!=NULL)
+  { w=p->v;
+    if (!g->directorio[w].alcanzado)
+        profundidadMejorado(w,g);
+    p = p->sig;
+  }
+  for(int i = 1; i <= g->orden; i++)
+    if (!g->directorio[i].alcanzado)
+      profundidadMejorado(i, g);
 }
+
 void amplitudMejorado(int v_inicio,tipoGrafo *g)
-{
+{ int w;
+  pArco  p;
+  Cola c;
+
+  colaCreaVacia(&c);
+  colaInserta(&c,v_inicio);
+  while (!colaVacia(&c))  {
+	w =colaSuprime(&c);
+    if (!g->directorio[w].alcanzado) {
+      printf("%d ",w);
+            g->directorio[w].alcanzado=1;
+            p =g->directorio[w].lista;
+      while (p!=NULL){
+        w = p->v;
+        colaInserta(&c,w);
+        p = p->sig;
+      }
+	  }
+  }  
+  for(int i = 1; i <= g->orden; i++)
+    if (!g->directorio[i].alcanzado)
+      amplitudMejorado(i, g);
 }
 /* Ejercicio 2*/
 
+int buscarVerticeGradoCero(tipoGrafo grafo)
+{
+  for (int i = 1; i <= grafo.orden; i++)
+    if (grafo.directorio[i].gradoEntrada == 0 && !grafo.directorio[i].ordenTop)
+      return i;
+  return -1;
+}
+
 int ordenTop1(tipoGrafo *grafo)
 {
+  int v;
+  pArco p;
+  iniciar(grafo);
+  for (int i = 1; i <= grafo->orden; i++){
+    v = buscarVerticeGradoCero(*grafo);
+    if (v == -1) return -1;
+    grafo->directorio[v].ordenTop = i;
+    p = grafo->directorio[v].lista;
+    while (p != NULL){
+      grafo->directorio[p->v].gradoEntrada -= 1;
+      p = p->sig;
+    }
+  }
 }
+
 int ordenTop2(tipoGrafo *grafo)
 {
 }
