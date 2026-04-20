@@ -1,4 +1,3 @@
-#include "arbol.h"
 #ifndef __COLA_H
 #define __COLA_H
 

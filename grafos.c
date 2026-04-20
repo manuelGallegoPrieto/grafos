@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include "cola.h"
 #include "grafos.h"
+#include "monticulo.h"
+
 /**********************************************
 / Inicia correctamente directorio de vertices *
 ***********************************************/
@@ -72,6 +74,7 @@ void amplitudMejorado(int v_inicio,tipoGrafo *g)
     if (!g->directorio[i].alcanzado)
       amplitudMejorado(i, g);
 }
+
 /* Ejercicio 2*/
 
 int buscarVerticeGradoCero(tipoGrafo grafo)
@@ -101,7 +104,31 @@ int ordenTop1(tipoGrafo *grafo)
 
 int ordenTop2(tipoGrafo *grafo)
 {
+  int v, w;
+  Cola c;
+  int orden = 1;
+
+  iniciar(grafo);
+  colaCreaVacia(&c);
+  for (v = 1; v <= grafo->orden; v++)
+    if (grafo->directorio[v].gradoEntrada == 0) colaInserta(&c, v);
+
+  while (!colaVacia(&c)){
+    v = colaSuprime(&c);
+    grafo->directorio[v].ordenTop = orden++;
+    pArco p = grafo->directorio[v].lista;
+    while (p != NULL){
+      w = p->v;
+      grafo->directorio[w].gradoEntrada -= 1;
+      if (grafo->directorio[w].gradoEntrada == 0) colaInserta(&c, w);
+      p = p->sig;
+    }
+  }
+
+  if (orden <= grafo->orden) return -1; // grafo cíclico
+  return 0;
 }
+
 /******************************************************************************/
 /* Recorrido en PROFUNDIDAD de un grafo. ¡CUIDADO! Depende del vertice inicial y del tipo de grafo */
 /*********************************************************************************/
@@ -171,4 +198,131 @@ void verGrafo(tipoGrafo *g)
        printf("\n");
    }
    printf("     +----+----+----+----+----+----+\n\n");
+}
+
+/* Ejercicio 3: Caminos mínimos en grafos dirigidos */
+/* a) NO Ponderados */
+
+void caminos1(int vInicio, tipoGrafo *g)
+{
+  pArco p;
+  int v, w;
+  int distActual;
+  iniciar(g);
+  g->directorio[vInicio].distancia = 0;
+  for (distActual = 0; distActual < g->orden; distActual++){
+    for (v == 1; v < g->orden; v++){
+      if (g->directorio[v].alcanzado == 0 && g->directorio[v].distancia == distActual){
+        g->directorio[v].alcanzado = 1;
+        p = g->directorio[v].lista;
+        while (p != NULL){
+          w = p->v;
+          if (g->directorio[w].distancia = INF){
+            g->directorio[w].distancia = g->directorio[v].distancia + 1;
+            g->directorio[w].anterior = v;
+          }
+          p = p->sig;
+        }
+      }
+    }
+  }
+}
+
+void caminos2(int vInicio, tipoGrafo *g)
+{
+  pArco p;
+  int v, w;
+  Cola c;
+  iniciar(g);
+  g->directorio[vInicio].distancia = 0;
+  colaCreaVacia(&c);
+  colaInserta(vInicio, &c);
+  while (!colaVacia(&c)){
+    v = colaSuprime(&c);
+    p = g->directorio[v].lista;
+    while (p != NULL){
+      w = p->v;
+      if (g->directorio[w].distancia = INF){
+        g->directorio[w].distancia = g->directorio[v].distancia + 1;
+        g->directorio[w].anterior = v;
+        colaInserta(w, &c);
+      }
+      p = p->sig;
+    }
+  }
+}
+
+/* b) PONDERADOS */
+void dijkstra1(int vInicio, tipoGrafo *g)
+{
+  pArco p;
+  int v, w;
+  int distActual, i;
+  iniciar(g);
+  g->directorio[vInicio].distancia = 0;
+  for (i = 1; i <= g->orden; i++){
+    v = buscarVerticeDistanciaMinimaNoAlcanzado(g);
+    if (v == -1) i = g->orden + 1;
+    else{
+      g->directorio[v].alcanzado = 1;
+      p = g->directorio[v].lista;
+      while (p != NULL){
+        w = p->v;
+        if (g->directorio[w].alcanzado == 0){
+          if (g->directorio[v].distancia + p->peso < g->directorio[w].distancia){
+            g->directorio[w].distancia = g->directorio[v].distancia + p->peso;
+            g->directorio[w].anterior = v;
+          }
+        }
+        p = p->sig;
+      }
+    }
+  }
+}
+
+void dijkstra2(int vInicio, tipoGrafo *g)
+{
+  Monticulo m;
+  tipoElementoM x;
+  pArco p;
+  tipoInfo v, w;
+  iniciar(g);
+  g->directorio[vInicio].distancia = 0;
+  iniciaMonticulo(&m);
+  x.clave = 0;
+  x.v = vInicio;
+  insertar(x, &m);
+  while (!vacioMonticulo(m)){
+    eliminarMinimo(&m, &x);
+    v = x.v;
+    if (g->directorio[v].alcanzado == 0){
+      g->directorio[v].alcanzado = 1;
+      p = g->directorio[v].lista;
+      while (p != NULL){
+        w = p->v;
+        if (g->directorio[w].alcanzado == 0){
+          if (g->directorio[v].alcanzado == 1){
+            g->directorio[w].distancia = g->directorio->distancia + p->peso;
+            g->directorio[w].anterior = v;
+            x.clave = g->directorio[w].distancia;
+            x.v = w;
+            insertar(x, &m);
+          }
+        }
+        p = p->sig;
+      }
+    }
+  }
+}
+
+int buscarVerticeDistanciaMinimaNoAlcanzado(tipoGrafo *g)
+{
+  int v, minDistancia = INF, verticeMin = -1;
+  for (v = 1; v <= g->orden; v++){
+    if (g->directorio[v].alcanzado == 0 && g->directorio[v].distancia < minDistancia){
+      minDistancia = g->directorio[v].distancia;
+      verticeMin = v;
+    }
+  }
+  return verticeMin;
 }

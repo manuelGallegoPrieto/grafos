@@ -17,6 +17,7 @@ int main(void)
 	iniciar(gT47);
   	profundidadMejorado(5,gT47); 	// Se necesita profundidad mejorado!!!
  	printf("\nAmplitud : ");
+	iniciar(gT47);
  	amplitudMejorado(5,gT47);	// Se necesita amplitud mejorado!!
 	ciclico = ordenTop2(gT47);
 	if (ciclico==-1) printf("\nGrafo ciclico ¡ No es posible la ordenación topológica !");
@@ -25,6 +26,7 @@ int main(void)
   	dijkstra1(1,gT47);
 	verGrafo(gT47);
         // Interpretación algoritmo de Dijkstra!!!
+	/*
 	vIni=1;
 	vFin=6;
 	distancia = costeyTrayectoria(vIni,vFin,gT47); // Debe mostrar la secuencia de vértices en el camino mínimo!!!!
@@ -34,7 +36,7 @@ int main(void)
 	todosCaminosMin(vIni,gT47);	
 	printf("\nCaminos Mínimos desde %d\n",vFin);
 	dijkstra1(vFin,gT47);	
-	todosCaminosMin(vFin,gT47);
+	todosCaminosMin(vFin,gT47);*/
 
 //	liberarListas(g);
 //	free(g);
