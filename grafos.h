@@ -12,6 +12,7 @@
 
   typedef struct tagarco
   { int v;
+    int u;
     int peso;
     struct tagarco *sig;
   } arco;

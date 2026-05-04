@@ -9,6 +9,7 @@
 #include "cola.h"
 #include "grafos.h"
 #include "monticulo.h"
+#include "conjuntos.h"
 
 /**********************************************
 / Inicia correctamente directorio de vertices *
@@ -325,4 +326,77 @@ int buscarVerticeDistanciaMinimaNoAlcanzado(tipoGrafo *g)
     }
   }
   return verticeMin;
+}
+
+// Ejercicio 4
+
+/*tipoGrafo * prim (tipoGrafo * g) {
+
+  pArco p;
+  vertices v, w;
+  int i = 1;
+  iniciar(g);
+  g->directorio[0].peso = 0;
+  while (i < g->orden){
+    v = buscarVerticeDistanciaMinimaNoAlcanzado(g);
+    g->directorio[v].alcanzado = 1;
+    p = g->directorio[v].lista;
+    while (p != NULL){
+      w = *p;
+      if (!g->directorio[w].alcanzado && g->directorio[w].peso > p->peso){
+        g->directorio[w].peso = p->peso;
+        g->directorio[w].anterior = v;
+      }
+      p = p->sig;
+    }
+  }
+
+}*/
+
+void aceptarArista(tipoElementoM x, tipoGrafo * g)
+{
+  
+}
+
+void construirMonticuloDeAristas(tipoGrafo * g, Monticulo * A)
+{
+  
+}
+
+tipoGrafo * kruskal (tipoGrafo * g){
+  // hago un monticulo, uso construirmonticulodearistas con el grafo y el, luego voy eliminando los min
+  // cont de num aristas aceptadas a 0 hasta g-orden-1
+  // una partición iniciara (con crear).
+  // dos tipoConjunto para ver representantes y un tipoelemento.
+  // un arbol de expansión para ir aceptando las aristas (es lo que devolvemos)
+
+  Monticulo A;
+  iniciaMonticulo(&A);
+  construirMonticuloDeAristas(g, &A);
+
+  int numAristasAceptadas = 0;
+
+  particion B;
+  crea(B);
+
+  tipoConjunto u, v;
+  tipoElementoM x;
+  
+  tipoGrafo * nuevo = (tipoGrafo *) calloc(1, sizeof(tipoGrafo));
+  nuevo->orden = g->orden;
+  iniciar(nuevo);
+
+  while (numAristasAceptadas < g->orden - 1){
+    eliminarMinimo(&x, &A);
+    u = buscar(x.u, B);
+    v = buscar(x.v, B);
+    if (u != v) {
+      unir(u, v, B);
+      numAristasAceptadas++;
+      aceptarArista(x, &nuevo);
+    }
+  }
+
+  return nuevo;
+
 }

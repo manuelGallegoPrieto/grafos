@@ -7,8 +7,8 @@ ejercicio2: ejercicio2.c grafos.h grafos.o cola.o
 
 ejercicio3: ejercicio3.c grafos.h grafos.o cola.o monticulo.o 
 	gcc -g ejercicio3.c grafos.o cola.o monticulo.o -o ejercicio3
-ejercicio4: ejercicio4.c grafos.h grafos.o cola.o pila.o monticulo.o 
-	gcc -g ejercicio4.c grafos.o cola.o pila.o monticulo.o -o ejercicio4
+ejercicio4: ejercicio4.c grafos.h grafos.o cola.o conjuntos.o monticulo.o 
+	gcc -g ejercicio4.c grafos.o cola.o  monticulo.o conjuntos.o -o ejercicio4
 
 # Para la ultima parte de ejercicio2.c necesitamos monticulo.o ...cambia la linea de ordenes...
 #ejercicio2: ejercicio2.c grafos.h grafos.o cola.o monticulo.o 
@@ -18,6 +18,8 @@ ejercicio4: ejercicio4.c grafos.h grafos.o cola.o pila.o monticulo.o
 
 monticulo.o: monticulo.c monticulo.h
 	gcc -g -c monticulo.c
+conjuntos.o: conjuntos.c conjuntos.h
+	gcc -g -c conjuntos.c
 grafos.o: grafos.c grafos.h
 	gcc -g -c grafos.c
 cola.o: cola.c cola.h
